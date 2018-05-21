@@ -446,7 +446,13 @@ public class MenuEntrySwapperPlugin extends Plugin
 		{
 			swap("use", option, target, true);
 		}
+		else if (config.swapWithdraw() && option.equals("withdraw-1"))
+		{
+			swapWithdraw("withdraw-x", option, target, true);
+		}
 	}
+	
+	
 
 	@Subscribe
 	public void onPostItemComposition(PostItemComposition event)
@@ -507,6 +513,29 @@ public class MenuEntrySwapperPlugin extends Plugin
 			client.setMenuEntries(entries);
 		}
 	}
+	
+	private void swapWithdraw(String optionA, String optionB, String target, boolean strict)
+	{
+		MenuEntry[] entries = client.getMenuEntries();
+		int idxA = searchIndex(entries, optionA, target, strict) + 1;
+		int idxB = searchIndex(entries, optionB, target, strict);
+
+		String entryOption = Text.removeTags(entries[idxA].getOption()).toLowerCase();
+		if (entryOption.equals("withdraw-10"))
+		{
+			idxA--;
+		}
+
+		if (idxA >= 0 && idxB >= 0)
+		{
+			MenuEntry entry = entries[idxA];
+			entries[idxA] = entries[idxB];
+			entries[idxB] = entry;
+
+			client.setMenuEntries(entries);
+		}
+	}
+	
 
 	private void removeShiftClickCustomizationMenus()
 	{
